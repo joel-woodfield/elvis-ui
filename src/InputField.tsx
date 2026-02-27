@@ -1,19 +1,46 @@
 interface InputFieldProps {
   label: string;
   value?: string;
-  onChange?: (newValue: string) => void;
+  onChange?: (value: string) => void;
+  readonly?: boolean;
+  rows?: number;
 }
 
-export function InputField({ label, value, onChange }: InputFieldProps) {
+export function InputField({
+  label,
+  value,
+  onChange,
+  readonly = false,
+  rows,
+}: InputFieldProps) {
+  const commonClasses =
+    "p-2 rounded border border-gray-300 w-full";
+
+  const bgClass = readonly ? "bg-gray-100" : "bg-white";
+
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-gray-700 text-sm">{label}</label>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange && onChange(e.target.value)}
-        className="p-2 rounded bg-white border border-gray-300"
-      />
+      <label className="text-gray-700 text-sm">
+        {label}
+      </label>
+
+      {rows && rows > 1 ? (
+        <textarea
+          value={value}
+          rows={rows}
+          readOnly={readonly}
+          onChange={(e) => onChange && onChange(e.target.value)}
+          className={`${commonClasses} ${bgClass} resize-none`}
+        />
+      ) : (
+        <input
+          type="text"
+          value={value}
+          readOnly={readonly}
+          onChange={(e) => onChange && onChange(e.target.value)}
+          className={`${commonClasses} ${bgClass}`}
+        />
+      )}
     </div>
   );
 }
